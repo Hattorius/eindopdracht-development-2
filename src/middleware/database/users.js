@@ -1,14 +1,16 @@
-export class products {
+import crypto from "crypto";
+
+export class users {
 
     constructor(database) {
         this.database = database;
         this.error;
     }
 
-    async read(id = null, category_id = null, searchQuery = null) {
-        if (id === null && searchQuery === null && category_id === null) {
+    async read(id = null, username = null) {
+        if (id === null && username === null) {
             return await new Promise((resolve) => {
-                this.database.all("SELECT * FROM 'products'", [], (err, rows) => {
+                this.database.all("SELECT * FROM 'users'", [], (err, rows) => {
                     if (err !== null) {
                         this.error = err;
                         resolve([]);
@@ -19,25 +21,12 @@ export class products {
             });
         }
 
-        if (id !== null) {
+        if (username !== null) {
             return await new Promise((resolve) => {
-                this.database.get("SELECT * FROM 'products' WHERE id=?", id, (err, row) => {
+                this.database.get("SELECT * FROM 'users' WHERE username=?", username.toLowerCase(), (err, row) => {
                     if (err !== null) {
                         this.error = err;
-                        resolve([]);
-                    }
-                    this.error = null;
-                    resolve(row);
-                });
-            });
-        }
-
-        if (category_id !== null) {
-            return await new Promise((resolve) => {
-                this.database.all("SELECT * FROM 'products' WHERE category_id=?", category_id, (err, row) => {
-                    if (err !== null) {
-                        this.error = err;
-                        resolve([]);
+                        resolve(null);
                     }
                     this.error = null;
                     resolve(row);
@@ -46,7 +35,7 @@ export class products {
         }
 
         return await new Promise((resolve) => {
-            this.database.all("SELECT * FROM 'products' WHERE name LIKE '%' || ? || '%'", searchQuery, (err, row) => {
+            this.database.get("SELECT * FROM 'users' WHERE id=?", id, (err, row) => {
                 if (err !== null) {
                     this.error = err;
                     resolve([]);
@@ -74,20 +63,12 @@ export class products {
     }
 
     async create(options) {
-        return await this.simpleQuery("INSERT INTO 'products' (article_number, category_id, name, description, price, date_added, supplier, inventory) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [
-            options.article_number,
-            parseInt(options.category_id),
-            options.name,
-            options.description,
-            parseInt(options.price),
-            parseInt(new Date().getTime() / 1000),
-            options.supplier,
-            parseInt(options.inventory)
+        const md5sum = crypto.createHash('md5');
+        return await this.simpleQuery("INSERT INTO 'users' (username, email, password) VALUES (?, ?, ?)", [
+            options.username.toLowerCase(),
+            options.email,
+            md5sum.update(options.password).digest('hex')
         ]);
-    }
-
-    async delete(id) {
-        return await this.simpleQuery("DELETE FROM 'products' WHERE id=?", id);
     }
 
     async update(id, data) {
@@ -104,7 +85,7 @@ export class products {
         if (values.length < 1) return true;
         const query = names.join('=?, ') + '=?';
 
-        return await this.simpleQuery("UPDATE 'products' SET " + query + " WHERE id=?", [...values, id]);
+        return await this.simpleQuery("UPDATE 'users' SET " + query + " WHERE id=?", [...values, id]);
     }
 
 }

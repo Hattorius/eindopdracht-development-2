@@ -3,6 +3,7 @@ import sqlite3 from "sqlite3";
 import { categories } from "./database/categories.js";
 import { countries } from "./database/countries.js";
 import { products } from "./database/products.js";
+import { users } from "./database/users.js";
 
 const db = new sqlite3.Database('database.db');
 
@@ -90,7 +91,8 @@ export const database = (req, res, next) => {
     req.database = {
         categories: new categories(database),
         countries: new countries(database),
-        products: new products(database)
+        products: new products(database),
+        users: new users(database)
     };
 
     // Continue
