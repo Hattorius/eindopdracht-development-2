@@ -2,6 +2,7 @@ import sqlite3 from "sqlite3";
 
 import { categories } from "./database/categories.js";
 import { countries } from "./database/countries.js";
+import { products } from "./database/products.js";
 
 const db = new sqlite3.Database('database.db');
 
@@ -65,6 +66,7 @@ const databaseCreation = () => {
             CREATE TABLE IF NOT EXISTS "order_products" (
                 "order_id"	INTEGER NOT NULL,
                 "product_id"	INTEGER NOT NULL,
+                "quantity"  INTEGER NOT NULL DEFAULT 1,
                 FOREIGN KEY("order_id") REFERENCES "orders"("id"),
                 FOREIGN KEY("product_id") REFERENCES "products"("id")
             );
@@ -87,7 +89,8 @@ export const database = (req, res, next) => {
     req.rawDatabase = database;
     req.database = {
         categories: new categories(database),
-        countries: new countries(database)
+        countries: new countries(database),
+        products: new products(database)
     };
 
     // Continue
