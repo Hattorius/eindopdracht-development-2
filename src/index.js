@@ -1,6 +1,8 @@
-
 import express from 'express';
 const app = express();
+
+// we use json because we're modern like that
+app.use(express.json());
 
 
 // Import routes
