@@ -1,9 +1,20 @@
-import { handleSimpleQuery, require } from "./utils/require.js";
+import { handleSimpleQuery } from "./utils/handleSimpleQuery.js";
+import { require } from "./utils/require.js";
 
 export const read = async(req, res) => {
     // Receive and show categories
     // if category id is set, you'll find it in req.params.category_id
-    const categories = await req.database.categories.read();
+    var categories;
+    if (typeof req.params.category_id === 'undefined') {
+        categories = await req.database.categories.read();
+    } else {
+        categories = await req.database.categories.read(req.params.category_id);
+        if (typeof categories !== 'undefined') {
+            categories = [categories];
+        } else {
+            categories = null;
+        }
+    }
     if (req.database.categories.error !== null) {
         return res.json({
             'error': true,

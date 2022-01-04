@@ -1,6 +1,7 @@
 import sqlite3 from "sqlite3";
 
-import * as categories from "./database/categories.js";
+import { categories } from "./database/categories.js";
+import { countries } from "./database/countries.js";
 
 const db = new sqlite3.Database('database.db');
 
@@ -85,7 +86,8 @@ export const database = (req, res, next) => {
 
     req.rawDatabase = database;
     req.database = {
-        categories: new categories.table(database)
+        categories: new categories(database),
+        countries: new countries(database)
     };
 
     // Continue
