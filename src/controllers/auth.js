@@ -13,16 +13,15 @@ export const authenticate = async(req, res) => {
     const md5sum = crypto.createHash('md5');
     const hashedPassword = md5sum.update(req.body.password).digest('hex');
 
+    res.status(403);
     const result = await req.database.users.read(null, req.body.username);
     if (typeof result === 'undefined') {
-        res.status(403);
         return res.json({
             error: true,
             message: 'Username or password incorrect'
         });
     }
     if (result.password !== hashedPassword) { // give exactly the same error as we are bastards like that
-        res.status(403);
         return res.json({
             error: true,
             message: 'Username or password incorrect'

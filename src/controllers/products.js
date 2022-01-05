@@ -1,5 +1,6 @@
 import { handleSimpleQuery } from "./utils/handleSimpleQuery.js";
 import { require } from "./utils/require.js";
+import { error } from "./utils/returnError.js";
 
 export const read = async(req, res) => {
     // Receive and show products
