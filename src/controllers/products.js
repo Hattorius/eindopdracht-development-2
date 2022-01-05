@@ -7,6 +7,7 @@ export const read = async(req, res) => {
     // if category id is set, you'll find it in req.params.category_id
     // if search query is set, you'll find it in req.query.q
 
+    res.status(400);
     if (typeof req.params.product_id === 'undefined') req.params.product_id = null;
     if (typeof req.params.category_id === 'undefined') req.params.category_id = null;
     if (typeof req.query.q === 'undefined') req.query.q = null;
@@ -24,6 +25,7 @@ export const read = async(req, res) => {
     }
 
     if (req.database.products.error !== null) {
+        res.status(500);
         return res.json({
             'error': true,
             'message': 'Something went wrong with getting products',
@@ -31,6 +33,7 @@ export const read = async(req, res) => {
         });
     }
 
+    res.status(200);
     res.json({
         'error': false,
         'products': products
@@ -40,8 +43,10 @@ export const read = async(req, res) => {
 export const create = async(req, res) => {
     // Create product
     if (!req.auth.isadmin()) {
+        res.status(401);
         return error(res, "Not admin!")
     }
+    res.status(400);
     if (!require(req.body.article_number, res, "Article number")) return;
     if (!require(req.body.category_id, res, "Category id")) return;
     if (!require(req.body.name, res, "Product name")) return;
@@ -61,8 +66,10 @@ export const create = async(req, res) => {
 export const update = async(req, res) => {
     // Update product, product id can be found in req.params.product_id
     if (!req.auth.isadmin()) {
+        res.status(401);
         return error(res, "Not admin!")
     }
+    res.status(400);
     if (!require(req.params.product_id, res, "Product id")) return;
 
     return handleSimpleQuery(
@@ -76,8 +83,10 @@ export const update = async(req, res) => {
 export const del = async(req, res) => {
     // Delete product, product id can be found in req.params.product_id
     if (!req.auth.isadmin()) {
+        res.status(401);
         return error(res, "Not admin!")
     }
+    res.status(400);
     if (!require(req.params.product_id, res, "Product id")) return;
 
     return handleSimpleQuery(

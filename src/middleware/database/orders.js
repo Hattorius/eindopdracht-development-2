@@ -16,6 +16,19 @@ export class orders {
         this.error;
     }
 
+    async readProducts(orderid) {
+        return await new Promise((resolve) => {
+            this.database.all("SELECT * FROM 'order_products' WHERE order_id=?", [orderid], (err, rows) => {
+                if (err !== null) {
+                    this.error = err;
+                    resolve([]);
+                }
+                this.error = null;
+                resolve(rows);
+            });
+        });
+    }
+
     async read(userid = null) {
 
         if (userid === null) {

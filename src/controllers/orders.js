@@ -12,6 +12,7 @@ export const read = async(req, res) => {
     } else if (req.auth.isadmin()) {
         orders = await req.database.orders.read();
     } else {
+        res.status(401);
         return error(res, "No permission");
     }
 
@@ -19,7 +20,13 @@ export const read = async(req, res) => {
         orders = [];
     }
 
+    for (var i = 0; i < orders.length; i++) {
+        const order = orders[i];
+        orders[i].products = await req.database.orders.readProducts(order.id);
+    }
+
     if (req.database.orders.error !== null) {
+        res.status(500);
         return res.json({
             'error': true,
             'message': 'Something went wrong with getting orders',
@@ -27,6 +34,7 @@ export const read = async(req, res) => {
         });
     }
 
+    res.status(200);
     res.json({
         'error': false,
         'orders': orders
@@ -36,8 +44,10 @@ export const read = async(req, res) => {
 export const create = async(req, res) => {
     // Create order
     if (!req.auth.isuser()) {
+        res.status(401);
         return error(res, "Not logged in!")
     }
+    res.status(400);
     if (!require(req.body.address, res, "Address")) return;
     if (!require(req.body.products, res, "Products")) return;
     if (!require(req.body.products[0], res, "Products")) return;

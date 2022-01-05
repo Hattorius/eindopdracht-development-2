@@ -17,6 +17,7 @@ export const read = async(req, res) => {
     }
 
     if (req.database.countries.error !== null) {
+        res.status(500);
         return res.json({
             'error': true,
             'message': 'Something went wrong with getting countries',
@@ -24,6 +25,7 @@ export const read = async(req, res) => {
         });
     }
 
+    res.status(200);
     res.json({
         'error': false,
         'countries': countries
@@ -33,8 +35,10 @@ export const read = async(req, res) => {
 export const create = async(req, res) => {
     // Create country
     if (!req.auth.isadmin()) {
+        res.status(401);
         return error(res, "Not admin!")
     }
+    res.status(400);
     if (!require(req.body.name, res, "Country name")) return;
 
     return handleSimpleQuery(
@@ -48,8 +52,10 @@ export const create = async(req, res) => {
 export const update = async(req, res) => {
     // Update country, country id can be found in req.params.country_id and name at req.body.name
     if (!req.auth.isadmin()) {
+        res.status(401);
         return error(res, "Not admin!")
     }
+    res.status(400);
     if (!require(req.params.country_id, res, "Country id")) return;
     if (!require(req.body.name, res, "Country name")) return;
 
@@ -64,8 +70,10 @@ export const update = async(req, res) => {
 export const del = async(req, res) => {
     // Delete country, country id can be found in req.params.country_id
     if (!req.auth.isadmin()) {
+        res.status(401);
         return error(res, "Not admin!")
     }
+    res.status(400);
     if (!require(req.params.country_id, res, "Country id")) return;
 
     return handleSimpleQuery(

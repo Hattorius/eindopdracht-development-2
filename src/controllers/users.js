@@ -15,6 +15,7 @@ export const read = async(req, res) => {
         }
     } else {
         if (!req.auth.isadmin()) {
+            res.status(401);
             return error(res, "Not admin!")
         }
         users = await req.database.users.read();
@@ -27,6 +28,7 @@ export const read = async(req, res) => {
     }
 
     if (req.database.users.error !== null) {
+        res.status(500);
         return res.json({
             'error': true,
             'message': 'Something went wrong with getting users',
@@ -34,6 +36,7 @@ export const read = async(req, res) => {
         });
     }
 
+    res.status(200);
     res.json({
         'error': false,
         'users': users
@@ -42,6 +45,7 @@ export const read = async(req, res) => {
 
 export const create = async(req, res) => {
     // Create user
+    res.status(400);
     if (!require(req.body.username, res, "Username")) return;
     if (!require(req.body.email, res, "Email")) return;
     if (!require(req.body.password, res, "Password")) return;
@@ -58,8 +62,10 @@ export const create = async(req, res) => {
 export const update = async(req, res) => {
     // Update user, user id can be found in req.params.user_id
     if (!req.auth.isuser()) {
+        res.status(401);
         return error(res, "Not logged in!")
     }
+    res.status(400);
     if (!require(req.params.user_id, res, "User id")) return;
 
     return handleSimpleQuery(

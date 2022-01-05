@@ -17,6 +17,7 @@ export const read = async(req, res) => {
         }
     }
     if (req.database.categories.error !== null) {
+        res.status(500);
         return res.json({
             'error': true,
             'message': 'Something went wrong with getting categories',
@@ -24,6 +25,7 @@ export const read = async(req, res) => {
         });
     }
 
+    res.status(200);
     res.json({
         'error': false,
         'categories': categories
@@ -33,8 +35,10 @@ export const read = async(req, res) => {
 export const create = async(req, res) => {
     // Create category
     if (!req.auth.isadmin()) {
+        res.status(401);
         return error(res, "Not admin!")
     }
+    res.status(400);
     if (!require(req.body.name, res, "Category name")) return;
 
     return handleSimpleQuery(
@@ -48,8 +52,10 @@ export const create = async(req, res) => {
 export const update = async(req, res) => {
     // Update category, category id can be found in req.params.category_id and name at req.body.name
     if (!req.auth.isadmin()) {
+        res.status(401);
         return error(res, "Not admin!")
     }
+    res.status(400);
     if (!require(req.params.category_id, res, "Category id")) return;
     if (!require(req.body.name, res, "Category name")) return;
 
@@ -64,8 +70,10 @@ export const update = async(req, res) => {
 export const del = async(req, res) => {
     // Delete category, category id can be found in req.params.category_id
     if (!req.auth.isadmin()) {
+        res.status(401);
         return error(res, "Not admin!")
     }
+    res.status(400);
     if (!require(req.params.category_id, res, "Category id")) return;
 
     return handleSimpleQuery(

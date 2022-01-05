@@ -6,6 +6,7 @@ export const veryVERYsecretKey = "yes";
 
 export const authenticate = async(req, res) => {
     // Authenticate user
+    res.status(400);
     if (!require(req.body.username, res, "Username")) return;
     if (!require(req.body.password, res, "Password")) return;
 
@@ -14,12 +15,14 @@ export const authenticate = async(req, res) => {
 
     const result = await req.database.users.read(null, req.body.username);
     if (typeof result === 'undefined') {
+        res.status(403);
         return res.json({
             error: true,
             message: 'Username or password incorrect'
         });
     }
     if (result.password !== hashedPassword) { // give exactly the same error as we are bastards like that
+        res.status(403);
         return res.json({
             error: true,
             message: 'Username or password incorrect'
@@ -39,6 +42,7 @@ export const authenticate = async(req, res) => {
 
     res.cookie('Authorization', jwt.compact(), { domain: '.' + process.env.URL, path: '/api', httpOnly: true, expires: new Date(jwt.body.exp) });
 
+    res.status(200);
     res.send({
         error: false,
         auth: jwt.compact()
