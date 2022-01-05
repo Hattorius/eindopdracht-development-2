@@ -1,5 +1,6 @@
 import { handleSimpleQuery } from "./utils/handleSimpleQuery.js";
 import { require } from "./utils/require.js";
+import { error } from "./utils/returnError.js";
 
 export const read = async(req, res) => {
     // Receive and show categories
@@ -31,6 +32,9 @@ export const read = async(req, res) => {
 
 export const create = async(req, res) => {
     // Create category
+    if (!req.auth.isadmin()) {
+        return error(res, "Not admin!")
+    }
     if (!require(req.body.name, res, "Category name")) return;
 
     return handleSimpleQuery(
@@ -43,6 +47,9 @@ export const create = async(req, res) => {
 
 export const update = async(req, res) => {
     // Update category, category id can be found in req.params.category_id and name at req.body.name
+    if (!req.auth.isadmin()) {
+        return error(res, "Not admin!")
+    }
     if (!require(req.params.category_id, res, "Category id")) return;
     if (!require(req.body.name, res, "Category name")) return;
 
@@ -56,6 +63,9 @@ export const update = async(req, res) => {
 
 export const del = async(req, res) => {
     // Delete category, category id can be found in req.params.category_id
+    if (!req.auth.isadmin()) {
+        return error(res, "Not admin!")
+    }
     if (!require(req.params.category_id, res, "Category id")) return;
 
     return handleSimpleQuery(

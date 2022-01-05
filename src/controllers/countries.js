@@ -32,6 +32,9 @@ export const read = async(req, res) => {
 
 export const create = async(req, res) => {
     // Create country
+    if (!req.auth.isadmin()) {
+        return error(res, "Not admin!")
+    }
     if (!require(req.body.name, res, "Country name")) return;
 
     return handleSimpleQuery(
@@ -44,6 +47,9 @@ export const create = async(req, res) => {
 
 export const update = async(req, res) => {
     // Update country, country id can be found in req.params.country_id and name at req.body.name
+    if (!req.auth.isadmin()) {
+        return error(res, "Not admin!")
+    }
     if (!require(req.params.country_id, res, "Country id")) return;
     if (!require(req.body.name, res, "Country name")) return;
 
@@ -57,6 +63,9 @@ export const update = async(req, res) => {
 
 export const del = async(req, res) => {
     // Delete country, country id can be found in req.params.country_id
+    if (!req.auth.isadmin()) {
+        return error(res, "Not admin!")
+    }
     if (!require(req.params.country_id, res, "Country id")) return;
 
     return handleSimpleQuery(

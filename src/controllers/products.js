@@ -39,6 +39,9 @@ export const read = async(req, res) => {
 
 export const create = async(req, res) => {
     // Create product
+    if (!req.auth.isadmin()) {
+        return error(res, "Not admin!")
+    }
     if (!require(req.body.article_number, res, "Article number")) return;
     if (!require(req.body.category_id, res, "Category id")) return;
     if (!require(req.body.name, res, "Product name")) return;
@@ -57,6 +60,9 @@ export const create = async(req, res) => {
 
 export const update = async(req, res) => {
     // Update product, product id can be found in req.params.product_id
+    if (!req.auth.isadmin()) {
+        return error(res, "Not admin!")
+    }
     if (!require(req.params.product_id, res, "Product id")) return;
 
     return handleSimpleQuery(
@@ -69,6 +75,9 @@ export const update = async(req, res) => {
 
 export const del = async(req, res) => {
     // Delete product, product id can be found in req.params.product_id
+    if (!req.auth.isadmin()) {
+        return error(res, "Not admin!")
+    }
     if (!require(req.params.product_id, res, "Product id")) return;
 
     return handleSimpleQuery(

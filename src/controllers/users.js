@@ -14,6 +14,9 @@ export const read = async(req, res) => {
             users = undefined;
         }
     } else {
+        if (!req.auth.isadmin()) {
+            return error(res, "Not admin!")
+        }
         users = await req.database.users.read();
     }
 
@@ -54,6 +57,9 @@ export const create = async(req, res) => {
 
 export const update = async(req, res) => {
     // Update user, user id can be found in req.params.user_id
+    if (!req.auth.isuser()) {
+        return error(res, "Not logged in!")
+    }
     if (!require(req.params.user_id, res, "User id")) return;
 
     return handleSimpleQuery(
