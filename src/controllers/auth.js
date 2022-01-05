@@ -26,7 +26,21 @@ export const authenticate = async(req, res) => {
         });
     }
 
-    console.log(req.get('host'));
+    var scope = ['user'];
+    if (result.administrator == 1) {
+        scope.push('admin');
+    }
 
-    res.send('hi');
+    const jwt = nJwt.create({
+        iss: process.env.URL,
+        sub: 'user/' + result.id.toString(),
+        scope: scope
+    }, process.env.JWT_KEY);
+
+    res.cookie('Authorization', jwt.compact(), { domain: '.' + process.env.URL, path: '/api', httpOnly: true, expires: new Date(jwt.body.exp) });
+
+    res.send({
+        error: false,
+        auth: jwt.compact()
+    });
 }

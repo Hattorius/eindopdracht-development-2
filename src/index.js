@@ -1,9 +1,13 @@
+import { config } from 'dotenv';
+config();
 import express from 'express';
+import cookieParser from 'cookie-parser';
+
 const app = express();
 
 // we use json because we're modern like that
 app.use(express.json());
-
+app.use(cookieParser());
 
 // Import routes
 import { categories } from './routes/categories.js';

@@ -8,7 +8,11 @@ export const read = async(req, res) => {
     // if me is set, url will contain 'me' (check req.path)
     var users;
     if (req.path.includes('me')) {
-        users = await req.database.users.read('me');
+        if (req.auth.isuser()) {
+            users = await req.database.users.read(req.auth.userid_str());
+        } else {
+            users = undefined;
+        }
     } else {
         users = await req.database.users.read();
     }

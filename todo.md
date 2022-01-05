@@ -12,10 +12,10 @@ endpoints:
  - api/orders
  - api/users/:id/orders
  - api/orders/:id
- - api/users
- - api/users/:id
- - api/users/me
- - api/auth
+ - api/users ✅
+ - api/users/:id 
+ - api/users/me ✅
+ - api/auth ✅
 
 classes:
  - categories database class ✅
@@ -23,5 +23,5 @@ classes:
  - products database class ✅
  - orders database class
  - order products database class
- - users database class
- - authentication class (with JWT)
+ - users database class ✅
+ - authentication class (with JWT) ✅
