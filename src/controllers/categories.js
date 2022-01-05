@@ -26,6 +26,9 @@ export const read = async(req, res) => {
     }
 
     res.status(200);
+    if (categories === null) {
+        res.status(404);
+    }
     res.json({
         'error': false,
         'categories': categories

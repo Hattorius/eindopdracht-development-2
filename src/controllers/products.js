@@ -35,6 +35,9 @@ export const read = async(req, res) => {
     }
 
     res.status(200);
+    if (products === null) {
+        res.status(404);
+    }
     res.json({
         'error': false,
         'products': products
