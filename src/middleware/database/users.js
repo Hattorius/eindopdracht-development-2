@@ -75,7 +75,7 @@ export class users {
         const dataKeys = Object.keys(data);
         var names = [];
         var values = [];
-        var options = ["article_number", "category_id", "name", "description", "price", "supplier", "inventory"];
+        var options = ["username", "email", "password", "administrator"];
         for (var i = 0; i < dataKeys.length; i++) {
             if (options.includes(dataKeys[i])) {
                 names.push(dataKeys[i]);

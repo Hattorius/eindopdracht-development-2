@@ -54,4 +54,12 @@ export const create = async(req, res) => {
 
 export const update = async(req, res) => {
     // Update user, user id can be found in req.params.user_id
+    if (!require(req.params.user_id, res, "User id")) return;
+
+    return handleSimpleQuery(
+        res,
+        req.database.users,
+        await req.database.users.update(req.params.user_id, req.body),
+        'updating user'
+    );
 }
