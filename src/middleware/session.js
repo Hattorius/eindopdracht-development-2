@@ -16,6 +16,9 @@ class authenticated {
         if (!this.yes()) {
             return null;
         }
+        if (this.user === 'dev') {
+            return 0;
+        }
         return parseInt(this.user.body.sub.split('/')[1])
     }
 

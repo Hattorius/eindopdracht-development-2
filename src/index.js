@@ -4,9 +4,6 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUI from 'swagger-ui-express';
-
 const app = express();
 
 // we use json because we're modern like that
@@ -23,18 +20,6 @@ import { orders } from './routes/orders.js';
 import { users } from './routes/users.js';
 import { auth } from './routes/auth.js';
 
-// Do swag(ger) stuff
-const swagger = swaggerJSDoc({
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Webshop API',
-            version: '1.0.0'
-        }
-    },
-    apis: ['./routes/*.js']
-});
-
 // Import middleware
 import { session } from './middleware/session.js';
 app.use(session);
@@ -42,7 +27,6 @@ import { database } from './middleware/database.js';
 app.use(database);
 
 // Routing here
-app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swagger));
 app.use('/api/categories', categories);
 app.use('/api/products', products);
 app.use('/api/countries', countries);

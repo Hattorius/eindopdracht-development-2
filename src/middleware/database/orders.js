@@ -72,12 +72,20 @@ export class orders {
         return false;
     }
 
-    async create(user_id, options) {
+    async create(user_id, options, products_db) {
         var products = [];
         for (var i = 0; i < options.products.length; i++) {
             const product = options.products[i];
             if (typeof product.id !== 'undefined' && typeof product.quantity !== 'undefined') {
+                const product_row = await products_db.read(product.id);
+                if (product_row.inventory < product.quantity) {
+                    this.error = "Not enough stock";
+                    return false;
+                }
                 products.push(product);
+                await products_db.update(product.id, {
+                    "inventory": parseInt(product_row.inventory) - parseInt(product.quantity)
+                });
             }
         }
 

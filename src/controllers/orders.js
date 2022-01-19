@@ -45,7 +45,7 @@ export const create = async(req, res) => {
     // Create order
     if (!req.auth.isuser()) {
         res.status(401);
-        return error(res, "Not logged in!")
+        return error(res, "Not logged in!");
     }
     res.status(400);
     if (!require(req.body.address, res, "Address")) return;
@@ -55,7 +55,7 @@ export const create = async(req, res) => {
     return handleSimpleQuery(
         res,
         req.database.orders,
-        await req.database.orders.create(req.auth.userid(), req.body),
+        await req.database.orders.create(req.auth.userid(), req.body, req.database.products),
         'creating order'
     );
 }
